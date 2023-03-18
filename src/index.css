@@ -9,3 +9,9 @@
         font-family: 'Poppins', sans-serif;
     }
 }
+
+@layer base{
+    body{
+        background-image: url('../public/earth_from_space_2-wallpaper-1920x1080.jpg');
+    }
+}

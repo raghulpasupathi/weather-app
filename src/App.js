@@ -6,6 +6,8 @@ import TemperatureAndDetails from './components/TemperatureAndDetails';
 import TimeAndLocation from './components/TimeAndLocation';
 import TopButtons from './components/TopButtons';
 import getFormattedWeatherData from './services/WeatherService';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
 
@@ -15,10 +17,16 @@ function App() {
 
   useEffect(() => {
     const fetchWeather = async() => {
+      const m = query.q ? query.q.toUpperCase() : "current loaction.."
+      
+      toast.info('Fetching weather for ' + m);
+
       await getFormattedWeatherData({...query, units: units})
       .then((data) => {
-        console.log(data);
+        toast.success(`Successfully fetched weather for ${data.name}, ${data.country}..`)
         setWeather(data);
+      }).catch((e) => {
+        toast.error(`Failed to fetch data for ${query.q.toUpperCase()}`)
       });
     }
     fetchWeather();
@@ -33,7 +41,7 @@ function App() {
     return "from-yellow-700 to-orange-700";
   }
   return <div className="App">
-      <div className={`mx-auto max-w-screen-md mt-4 py-5 px-32 bg-gradient-to-br shadow-xl shadow-gray-400 ${formatBackground()}`}>
+      <div className={`mx-auto max-w-screen-md mt-4 py-12 px-32 bg-gradient-to-b shadow-xl shadow-gray-400 ${formatBackground()}`}>
         <TopButtons setQuery= {setQuery}/>
         <Inputs setQuery= {setQuery} units={units} setUnits={setUnits}/>
 
@@ -46,6 +54,8 @@ function App() {
         <Forecast title="daily forecast" items={weather.daily}/>
         </div>
         }
+
+        <ToastContainer autoClose={5000} theme='colored' newestOnTop={true}/>
       </div>
     </div>
 }

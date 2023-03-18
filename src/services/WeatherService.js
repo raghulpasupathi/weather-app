@@ -6,15 +6,12 @@ const getWeatherData = (infoType, searchParams) => {
     const url = new URL(BASE_URL + '/' + infoType);
     url.search = new URLSearchParams({ ...searchParams, appid: API_KEY_1});
 
-    console.log(url);
-
     return fetch(url)
         .then((res) => (res.json()));
 
 }
 
 const formatCurrentWeather = (data) => {
-    console.log('weatherRaw', data)
     const {
         coord: { lon, lat },
         main: { temp, feels_like, temp_max, temp_min, humidity },
@@ -31,9 +28,6 @@ const formatCurrentWeather = (data) => {
 }
 
 const formatForecastWeather = (data) => {
-
-    console.log('ForecastRaw', data);
-
     let { city: {timezone}, list } = data, daily = [];
 
     for(let i = 3, j = 11; i<=35; i+=8, j+=8)
@@ -63,10 +57,9 @@ const iconUrlFromCode = (code) => `https://openweathermap.org/img/wn/${code}@2x.
 
 const getFormattedWeatherData = async (searchParams) => {
     const formattedCurrentWeather = await getWeatherData('weather', searchParams).then(formatCurrentWeather);
-    console.log('weather', formattedCurrentWeather);
     const  {lat, lon} = formattedCurrentWeather;
-    const formattedForecastWeather = await getWeatherData('forecast', { lat, lon, cnt: 40,units: searchParams.units }).then(formatForecastWeather)
-    console.log('Forecast', formattedForecastWeather);
+    const formattedForecastWeather = await getWeatherData('forecast', { lat, lon, cnt: 40,units: searchParams.units }).then(formatForecastWeather);
+    
     return {...formattedCurrentWeather, ...formattedForecastWeather};
 }
 
